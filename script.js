@@ -1,5 +1,150 @@
 'use strict';
 
+// SETTERS AND GETTERS:
+
+const account = {
+  owner: 'Jonas',
+  movements: [200, 530, 120, 300],
+
+  get latest() {
+    return this.movements.slice(-1).pop();
+  },
+
+  set latest(num) {
+    this.movements.push(num);
+    console.log(this);
+  },
+};
+
+console.log(account.latest);
+
+account.latest = 50; // The calue is just assigned instead of calling the method. Since it acts like a peoperty and not a method
+
+console.log(`---------------------------------------------------------`);
+class PersonCl {
+  // constructor function needs to be written using constructor keyword
+
+  constructor(fullName, birthYear) {
+    this.fullName = fullName;
+    this.birthYear = birthYear;
+  }
+
+  // All functions defined outside contructor will automatically go into prototype
+
+  get age() {
+    return 2037 - this.birthYear;
+  }
+
+  // Set useful for DATA VALIDATION: => Setting a property that already exists
+  set fullName(name) {
+    if (name.includes(' ')) this._fullName = name;
+    else alert(`${name} is not a full name.`);
+  }
+
+  get fullName() {
+    return this._fullName;
+  }
+
+  greet() {
+    console.log(`Hi, this is ${this.firstName}.`);
+  }
+}
+
+const harsh = new PersonCl('Harsh Mohite', 1996);
+console.log(harsh);
+console.log(harsh.fullName); // Harsh Mohite
+
+const walter = new PersonCl('Walter White', 1950);
+console.log(walter); // _fullName will be missing.
+
+/*
+// ES6 Classes:
+
+// Class Expression:
+
+const Individual = class {
+  constructor(firstName, birthYear) {
+    this.firstName = firstName;
+    this.birthYear = birthYear;
+  }
+
+  getAge() {
+    console.log(2037 - this.birthYear);
+  }
+
+  greet() {
+    console.log(`Hi! My name is ${this.firstName}`);
+  }
+};
+
+const swastik = new Individual('Swastik', 1999);
+console.log(swastik);
+
+// Class Declaration:
+
+class PersonCl {
+  // constructor function needs to be written using constructor keyword
+
+  constructor(firstName, birthYear) {
+    this.firstName = firstName;
+    this.birthYear = birthYear;
+  }
+
+  // All functions defined outside contructor will automatically go into prototype
+
+  getAge() {
+    console.log(2037 - this.birthYear);
+  }
+
+  greet() {
+    console.log(`Hi, this is ${this.firstName}.`);
+  }
+}
+
+const harsh = new PersonCl('Harsh', 1995);
+console.log(harsh);
+
+harsh.getAge(); // 41
+harsh.greet(); // Hi! My name is Harsh
+
+console.log(harsh.__proto__ === PersonCl.prototype);
+
+
+/*
+// CODING CHALLENGE -1 :
+
+const Car = function (make, speed) {
+  this.make = make;
+  this.speed = speed;
+};
+
+const car1 = new Car('BMW', 120);
+const car2 = new Car('Mercedes', 95);
+
+console.log(car1);
+console.log(car2);
+
+Car.prototype.accelerate = function () {
+  this.speed += 10;
+  console.log(this.speed);
+};
+
+Car.prototype.brake = function () {
+  this.speed -= 5;
+  console.log(this.speed);
+};
+
+Car.prototype.hasABS = true;
+
+car1.brake(); // 115
+car1.brake(); // 110
+car2.brake(); // 90
+car2.accelerate(); // 100
+car2.accelerate(); // 110
+
+console.log(car1.hasABS); // true
+
+/*
 const Person = function (firstName, lastName, birthYear) {
   this.firstName = firstName;
   //   this.nameFirst = firstName; // Can rename properties as well.
@@ -50,3 +195,4 @@ console.log(jonas.species, jack.species);
 
 console.log(jonas.hasOwnProperty('firstName')); // true => own property of jonas obj
 console.log(jonas.hasOwnProperty('species')); // false => not own property => present in prototype
+*/
