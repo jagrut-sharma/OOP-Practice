@@ -1,6 +1,6 @@
 'use strict';
 
-// SETTERS AND GETTERS:
+// SETTERS/GETTERS AND STATIC METHODS:
 
 const account = {
   owner: 'Jonas',
@@ -48,6 +48,12 @@ class PersonCl {
   greet() {
     console.log(`Hi, this is ${this.firstName}.`);
   }
+
+  // static functions => only attached to constructor function => not accessible to prototype
+
+  static namastey() {
+    console.log(`Namastey, I'm a person`);
+  }
 }
 
 const harsh = new PersonCl('Harsh Mohite', 1996);
@@ -56,6 +62,19 @@ console.log(harsh.fullName); // Harsh Mohite
 
 const walter = new PersonCl('Walter White', 1950);
 console.log(walter); // _fullName will be missing.
+
+console.log(Array.from(document.querySelectorAll('h1'))); // [h1] => converts array like structure into an array.
+// console.log([1, 2, 3].from()); // Gives `tyoe error: .from is not a function`
+
+PersonCl.hey = function () {
+  console.log(`Hey There. Hope you are doing well.`);
+};
+
+PersonCl.hey();
+// harsh.hey(); // gives error as harsh.hey is not a function => hey() is not present in the prototype but instead attached to construcor function and is only available there.
+
+PersonCl.namastey();
+// harsh.namastey(); // gives type error: harsh.namastey is not a function.
 
 /*
 // ES6 Classes:
