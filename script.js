@@ -1,5 +1,123 @@
 'use strict';
 
+const Person = function (firstName, birthYear) {
+  this.firstName = firstName;
+  this.birthYear = birthYear;
+};
+
+Person.prototype.calcAge = function () {
+  console.log(2037 - this.birthYear);
+};
+
+const Student = function (firstName, birthYear, course) {
+  Person.call(this, firstName, birthYear);
+  this.course = course;
+};
+
+Student.prototype = Object.create(Person.prototype);
+
+Student.prototype.introduce = function () {
+  console.log(`Hi, I'm ${this.firstName} and I study ${this.course}`);
+};
+
+const mike = new Student('Mike', 2009, 'CS');
+console.log(mike);
+mike.introduce();
+mike.calcAge();
+
+console.log(mike.__proto__);
+console.log(mike.__proto__.__proto__);
+
+console.log(mike instanceof Student); // true
+console.log(mike instanceof Person); // true => Would have given false if Object.create was not used to link prototype chain.
+console.log(mike instanceof Object); // true
+
+console.dir(Student.prototype.constructor); // ƒ Person(firstName, birthYear)
+Student.prototype.constructor = Student;
+console.dir(Student.prototype.constructor); // ƒ Student(firstName, birthYear, course)
+
+/*
+// Coding Challenge - 2:
+
+class CarCl {
+  constructor(make, speed) {
+    this.make = make;
+    this.speed = speed;
+  }
+
+  accelerate() {
+    this.speed += 10;
+    console.log(this.make, this.speed);
+  }
+
+  brake() {
+    this.speed -= 5;
+    console.log(this.make, this.speed);
+  }
+
+  get speedUS() {
+    return Number((this.speed / 1.6).toFixed(2));
+  }
+
+  set speedUS(speedInUS) {
+    this.speed = speedInUS * 1.6;
+    console.log(this.make, this.speed);
+  }
+
+  // set speed(sample) {
+  //   this._speed = sample * 1.5;
+  // }
+
+  // get speed() {
+  //   return this._speed;
+  // }
+}
+
+const bmw = new CarCl('BMW', 120);
+const mercedes = new CarCl('Mercedes', 95);
+
+console.log(bmw, mercedes);
+
+bmw.brake(); // BMW 115
+mercedes.brake(); // Mercedes 90
+mercedes.accelerate(); // Mercedes 100
+mercedes.accelerate(); // Mercedes 110
+
+const ford = new CarCl('Ford', 120);
+console.log(ford); // CarCl {make: 'Ford', speed: 120}
+console.log(ford.speedUS); // 75
+ford.speedUS = 80; // Ford 128
+
+/*
+// Object.Create METHOD TO CREATE CLASS
+
+const PersonProto = {
+  calcAge() {
+    console.log(2037 - this.birthYear);
+  },
+
+  init(firstName, birthYear) {
+    this.firstName = firstName;
+    this.birthYear = birthYear;
+  },
+};
+
+const steven = Object.create(PersonProto);
+console.log(steven); // return empty object with PersonProto as prototype.
+steven.name = 'Steven';
+steven.birthYear = 1970;
+console.log(steven); // {name: 'Steven', birthYear: 1970}
+steven.calcAge(); // 67
+
+console.log(PersonProto === steven.__proto__); // true => PersonProto is assigned as a prototype to steven
+
+// Using init function as a replacement of constructor function
+const sarah = Object.create(PersonProto);
+sarah.init('Sarah', 1980);
+sarah.calcAge();
+console.log(sarah);
+
+/*
 // SETTERS/GETTERS AND STATIC METHODS:
 
 const account = {
@@ -70,10 +188,10 @@ PersonCl.hey = function () {
   console.log(`Hey There. Hope you are doing well.`);
 };
 
-PersonCl.hey();
+PersonCl.hey(); // Hey There. Hope you are doing well.
 // harsh.hey(); // gives error as harsh.hey is not a function => hey() is not present in the prototype but instead attached to construcor function and is only available there.
 
-PersonCl.namastey();
+PersonCl.namastey(); // Namastey, I'm a person
 // harsh.namastey(); // gives type error: harsh.namastey is not a function.
 
 /*
