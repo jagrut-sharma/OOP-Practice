@@ -1,5 +1,51 @@
 'use strict';
 
+const PersonProto = {
+  init(firstName, birthYear) {
+    this.firstName = firstName;
+    this.birthYear = birthYear;
+  },
+
+  calcAge() {
+    console.log(2037 - this.birthYear);
+  },
+};
+
+const sarah = Object.create(PersonProto);
+// console.log(sarah); // {}
+// sarah.init('Sarah', 1998);
+// console.log(sarah); // {firstName: 'Sarah', birthYear: 1998}
+// sarah.calcAge(); // 39
+// console.log(sarah.__proto__); // {init: ƒ, calcAge: ƒ}
+
+const StudentProto = Object.create(PersonProto);
+StudentProto.init = function (firstName, birthYear, course) {
+  PersonProto.init.call(this, firstName, birthYear);
+  this.course = course;
+};
+
+StudentProto.introduce = function () {
+  console.log(`Hi, I'm ${this.firstName} and I am pursuing ${this.course}`);
+};
+
+StudentProto.calcAge = function () {
+  console.log(
+    `I am ${
+      2037 - this.birthYear
+    } years old, but as a student I feel much older`
+  );
+};
+
+const jay = Object.create(StudentProto);
+jay.init('Jay', 2010, 'Web Development');
+
+console.log(jay);
+jay.introduce(); // Hi, I'm Jay and I am pursuing Web Development
+jay.calcAge(); // I am 27 years old, but as a student I feel much older => Overwrites calcAge in PersonProto
+
+// Inheritance between Classes using Object.create:
+
+/*
 class PersonCl {
   // constructor function needs to be written using constructor keyword
 
