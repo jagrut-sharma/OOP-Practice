@@ -1,5 +1,137 @@
 'use strict';
 
+class PersonCl {
+  // constructor function needs to be written using constructor keyword
+
+  constructor(fullName, birthYear) {
+    this.fullName = fullName;
+    this.birthYear = birthYear;
+  }
+
+  // All functions defined outside contructor will automatically go into prototype
+
+  calcAge() {
+    console.log(2037 - this.birthYear);
+  }
+
+  get age() {
+    return 2037 - this.birthYear;
+  }
+
+  // Set useful for DATA VALIDATION: => Setting a property that already exists
+  set fullName(name) {
+    if (name.includes(' ')) this._fullName = name;
+    else alert(`${name} is not a full name.`);
+  }
+
+  get fullName() {
+    return this._fullName;
+  }
+
+  greet() {
+    console.log(`Hi, this is ${this.firstName}.`);
+  }
+
+  // static functions => only attached to constructor function => not accessible to prototype
+
+  static namastey() {
+    console.log(`Namastey, I'm a person`);
+  }
+}
+
+class StudentCl extends PersonCl {
+  constructor(fullName, birthYear, course) {
+    // call to super needs to happen first as it is responsible for creatig this keyword.
+    super(fullName, birthYear);
+    this.course = course;
+  }
+
+  introduce() {
+    console.log(`Hi, I'm ${this.fullName} and I am pursuing ${this.course}`);
+  }
+
+  calcAge() {
+    console.log(
+      `I am ${
+        2037 - this.birthYear
+      } years old, but as a student I feel much older`
+    );
+  }
+}
+
+const martha = new StudentCl('Martha Jones', 2016, 'CSE');
+console.log(martha); // StudentCl {_fullName: 'Martha Jones', birthYear: 2016, course: 'CSE'}
+martha.introduce(); // Hi, I'm Martha Jones and I am pursuing CSE
+console.log(martha.age); // 21
+martha.calcAge(); // I am 21 years old, but as a student I feel much older
+
+// Here, as parameters are same -> we do not even need to call the super function => It automatically happens
+/* class StudentCl extends PersonCl {
+}
+
+const jack = new StudentCl('Jack Sparrow', 2004);
+console.log(jack);
+console.log(jack.fullName); */
+
+/*
+const Car = function (make, speed) {
+  this.make = make;
+  this.speed = speed;
+};
+
+Car.prototype.accelerate = function () {
+  this.speed += 10;
+  console.log(this.speed);
+};
+
+Car.prototype.brake = function () {
+  this.speed -= 5;
+  console.log(this.speed);
+};
+
+const bmw = new Car('BMW', 120);
+const mercedes = new Car('Mercedes', 95);
+
+const EV = function (make, speed, charge) {
+  Car.call(this, make, speed);
+  this.charge = charge;
+};
+
+// To link the prototype chain
+EV.prototype = Object.create(Car.prototype);
+// To make a EV's instance the EV construcor function that was reset to Car due to Object.create()
+EV.prototype.constructor = EV;
+
+EV.prototype.chargeBattery = function (chargeTo) {
+  this.charge = chargeTo;
+  console.log(`Battery currently at ${this.charge}%`);
+};
+
+EV.prototype.accelerate = function () {
+  this.speed += 20;
+  this.charge -= 1;
+  console.log(
+    `${this.make} is going at ${this.speed}, with a charge of ${this.charge}%`
+  );
+};
+
+// console.dir(EV.prototype.constructor);
+
+const tata = new EV('TATA', 90, 80);
+console.log(tata);
+
+const tesla = new EV('Tesla', 110, 90);
+console.log(tesla);
+
+tata.accelerate();
+tata.brake();
+tata.accelerate();
+tata.chargeBattery(90);
+
+tesla.accelerate();
+tata.accelerate();
+
+/*
 const Person = function (firstName, birthYear) {
   this.firstName = firstName;
   this.birthYear = birthYear;
@@ -114,8 +246,8 @@ console.log(PersonProto === steven.__proto__); // true => PersonProto is assigne
 // Using init function as a replacement of constructor function
 const sarah = Object.create(PersonProto);
 sarah.init('Sarah', 1980);
-sarah.calcAge();
-console.log(sarah);
+sarah.calcAge(); // 57
+console.log(sarah); // {firstName: 'Sarah', birthYear: 1980}
 
 /*
 // SETTERS/GETTERS AND STATIC METHODS:
@@ -244,7 +376,7 @@ console.log(harsh);
 harsh.getAge(); // 41
 harsh.greet(); // Hi! My name is Harsh
 
-console.log(harsh.__proto__ === PersonCl.prototype);
+console.log(harsh.__proto__ === PersonCl.prototype); // true
 
 
 /*
