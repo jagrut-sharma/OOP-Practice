@@ -1,5 +1,166 @@
 'use strict';
 
+// Coding Challenge - 4:
+
+// 1. Re-create Challenge #3, but this time using ES6 classes: create an 'EVCl'
+// child class of the 'CarCl' class
+// 2. Make the 'charge' property private
+// 3. Implement the ability to chain the 'accelerate' and 'chargeBattery'
+// methods of this class, and also update the 'brake' method in the 'CarCl'
+// class. Then experiment with chaining!
+
+class CarCl {
+  constructor(make, speed) {
+    this.make = make;
+    this.speed = speed;
+  }
+
+  accelerate() {
+    this.speed += 10;
+    console.log(this.make, this.speed);
+    return this;
+  }
+
+  brake() {
+    this.speed -= 5;
+    console.log(this.make, this.speed);
+    return this;
+  }
+
+  get speedUS() {
+    return Number((this.speed / 1.6).toFixed(2));
+  }
+
+  set speedUS(speedInUS) {
+    this.speed = speedInUS * 1.6;
+    console.log(this.make, this.speed);
+  }
+}
+
+class EVCL extends CarCl {
+  // Private classfield
+  #charge;
+
+  constructor(make, speed, charge) {
+    super(make, speed);
+    this.#charge = charge;
+  }
+
+  chargeTo(chargeLevel) {
+    this.#charge = chargeLevel;
+    console.log(`Battery level is at ${this.#charge}`);
+    return this;
+  }
+
+  accelerate() {
+    this.speed += 20;
+    this.#charge--;
+    console.log(
+      `${this.make} is going at ${this.speed} and is currently at ${
+        this.#charge
+      }%.`
+    );
+    return this;
+  }
+
+  getBattery() {
+    return this.#charge;
+  }
+}
+
+const bmw = new CarCl('BMW', 120, 85);
+const mercedes = new EVCL('Mercedes', 95, 91);
+const tata = new EVCL('TATA', 91, 23);
+
+tata
+  .accelerate()
+  .brake()
+  .accelerate()
+  .chargeTo(60)
+  .brake()
+  .brake()
+  .accelerate()
+  .chargeTo(100);
+
+console.log(tata.getBattery());
+
+// console.log(tata.#charge); // gives error
+/*
+class Account {
+  // 1) Public Class Fields:
+  local = navigator.language; // still everything works => These properties are available in all 'instances' and not the prototype
+
+  // 2) Private Class Fields:
+  #movements = [];
+  #pin;
+
+  constructor(owner, currency, pin) {
+    this.owner = owner;
+    this.currency = currency;
+    this.#pin = pin;
+    // this._movements = [];
+    // this.local = navigator.language;
+
+    console.log(`Thanks for opening an account with us!`);
+  }
+
+  // 3.) Public methods:
+
+  // Public interface
+
+  deposit(val) {
+    this.#movements.push(val);
+    return this;
+  }
+
+  withdrawal(val) {
+    this.deposit(-val);
+    return this;
+  }
+
+  getMovements() {
+    return this.#movements;
+  }
+
+  _approveLoan(val) {
+    return true;
+  }
+
+  requestLoan(val) {
+    if (this._approveLoan(val)) {
+      this.deposit(val);
+      console.log(`Loan Approved!`);
+      return this;
+    }
+  }
+
+  // 4) Private Method:
+  // #approveLoan(val){
+  //   return true;
+  // }
+}
+
+const acc1 = new Account('Jonas', 'EUR', 1111);
+console.log(acc1); // Account {owner: 'Jonas', currency: 'EUR', pin: 1111, movements: [], local: 'en-US'}
+
+// acc1.movements.push(250);
+// acc1.movements.push(-140);
+acc1.deposit(250);
+acc1.withdrawal(140);
+acc1.requestLoan(1000);
+
+// Accessing things we shouldn't:
+console.log(acc1); // Account {owner: 'Jonas', currency: 'EUR', pin: 1111, movements: [250, -140, 1000], local: 'en-US'}
+// After adding class fields => Account {local: 'en-US', owner: 'Jonas', currency: 'EUR', #movements: Array(3), #pin: 1111}
+console.log(acc1._pin); // 1111 => People can access but they will know through this convention that this should not be edited
+// console.log(acc1.#pin); // Uncaught SyntaxError: Private field '#pin' must be declared in an enclosing class (at script.js:57:17)
+console.log(acc1._approveLoan(100));
+
+console.log(acc1.getMovements()); // [250, -140, 1000]
+// console.log(acc1.#movements); // Uncaught SyntaxError: Private field '#movements' must be declared in an enclosing class (at script.js:59:17) => Can't access it.
+acc1.deposit(300).deposit(500).withdrawal(35).requestLoan(1000).withdrawal(700);
+console.log(acc1.getMovements()); // [250, -140, 1000, 300, 500, -35, 1000, -700]
+/*
 const PersonProto = {
   init(firstName, birthYear) {
     this.firstName = firstName;
